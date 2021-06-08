@@ -189,6 +189,55 @@
 
 // }
 
+
 function runEvent(e) {
   console.log("event type" + e.type);
+}
+// -------------------------------------------------------------------------------
+var form = document.getElementById("add_Form");
+var itemList = document.getElementById("items");
+var filter = document.getElementById("filter");
+
+form.addEventListener("submit", addItem);//to add an item
+itemList.addEventListener("click", removeItem);//for deletion of items
+filter.addEventListener("keyup", filterItems);// for filtering of items
+
+
+function addItem(e) {
+  //function for adding an item to the list
+  e.preventDefault();
+  var newItem = document.getElementById("item").value; //how we get the value
+  var li = document.createElement("li"); //creating new li to list the new item in
+  var deleteBtn = document.createElement("button"); // Create del button element
+  li.className = "list-group-item"; // item needs class
+  li.appendChild(document.createTextNode(newItem)); // Add text node with input value
+  li.appendChild(deleteBtn); //adding delete button to new item
+
+  deleteBtn.className = "btn btn-danger btn-sm float-right delete"; // Add classes to del button
+  deleteBtn.appendChild(document.createTextNode("X")); // Append text node
+
+  itemList.appendChild(li); // Append li to list
+}
+
+function removeItem(e) { //function for deleting an item
+  if (e.target.classList.contains("delete")) {
+    if (confirm("Are You Sure you want to delete this item?")) {
+      var li = e.target.parentElement;
+      itemList.removeChild(li);
+    }
+  }
+}
+
+// Filter Items
+function filterItems(e) {
+  var text = e.target.value.toLowerCase();
+  var items = itemList.getElementsByTagName("li");
+  Array.from(items).forEach(function (item) {
+    var itemName = item.firstChild.textContent;
+    if (itemName.toLowerCase().indexOf(text) != -1) {
+      item.style.display = "block";
+    } else {
+      item.style.display = "none";
+    }
+  });
 }
